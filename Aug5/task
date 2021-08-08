@@ -1,0 +1,12 @@
+created virtual environment
+steps:
+    1:pip install virtualenv (install virtualenv library)
+    2: virtualenv --version (check version)
+    3: virtualenv myenv (created virtual environment)
+    4: myenv\Scripts\activate (activate virtual environment)
+    5: deactivate (deactivate virtual environment)
+
+practice with pdb module
+
+import pdb
+pdb.set_trace()/breakpoint()
