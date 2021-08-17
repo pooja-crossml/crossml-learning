@@ -1,12 +1,18 @@
+'''
+    This project will convert the file data into json data and stores its output
+    in a file in dixtonary format.
+
+'''
 #!/usr/bin/python3
 
+# import all the required modules/libraries
 from datetime import datetime
 import getpass
 import os.path
 import json
 time = datetime.now().time().strftime('%H:%M:%S')
 print(f"Time: {time}")
-# This will access the current user
+# This will access the current system user
 
 username = getpass.getuser()
 print("Username: "+ username)
@@ -37,6 +43,8 @@ for files in all_files:
 
 # print(users_name)
 import random
+
+# This function will generate uuid for every user
 def uniq_uuid(users):
     # n = random.randint(1,9000000000)
     # print(hex(n))
@@ -52,6 +60,7 @@ def uniq_uuid(users):
 # print(uniq_uuid(users_name))
 uniq_uuid(users_name)
 
+# this function will generate username and email
 def generate_email(users):
     for user in users:
         first_name = user.split()[0]
@@ -60,12 +69,14 @@ def generate_email(users):
     return email
 
 print(generate_email(users_name))
+# this loop will help to create a json format user data
 user_data =[]
 for user_name in users_name:
     user_data.append({uniq_uuid(users_name):{"username":user_name,"email":generate_email(users_name)}})
 
 print(json.dumps(user_data))
 
+# Here we are storing json data in a file.
 json_output = open("json_output.txt","w")
 json_output.writelines(str(user_data))
 json_output.close()
