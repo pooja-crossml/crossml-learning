@@ -4,79 +4,94 @@
 
 '''
 #!/usr/bin/python3
-
-# import all the required modules/libraries
+'''
+    importing all the required libraries
+'''
 from datetime import datetime
 import getpass
 import os.path
 import json
-time = datetime.now().time().strftime('%H:%M:%S')
-print(f"Time: {time}")
-# This will access the current system user
-
-username = getpass.getuser()
-print("Username: "+ username)
-print()
-
-# will access the home directory
-parent_dir = os.path.expanduser("~")
-files_loc = parent_dir+'/users/'
-# print(parent_dir)
-print(files_loc)
-
-# import pathlib
-# it will check the current working directory's path
-# print(pathlib.Path.cwd()) #error while concating value.
-
-folder_path = os.getcwd()+'/users/'
-# print(folder_path)
-all_files = os.listdir(os.getcwd()+'/users/')
-print(all_files)
-# creating a list of files.
-
-users_name=[]
-for files in all_files:
-    file_data = open(folder_path+files, "r")
-    for names in file_data:
-        users_name.append(names.strip())
-    file_data.close()
-
-# print(users_name)
 import random
 
-# This function will generate uuid for every user
-def uniq_uuid(users):
-    # n = random.randint(1,9000000000)
-    # print(hex(n))
-    # b=hex(n)
-    for user in users:
-        b=random.randint(1000,9000000000)
-        # print(user.split())
-        name = user.split()
-        # print(user)
-        # print(hex(b)+name[0])
-    return hex(b)+name[0]
+'''
+    Access system time
+'''
+time = datetime.now().time().strftime('%H:%M:%S')
+print(f"Time: {time}")
 
-# print(uniq_uuid(users_name))
-uniq_uuid(users_name)
+'''
+    access user data
+'''
+username = getpass.getuser()
+print("Username: "+ username)
 
-# this function will generate username and email
-def generate_email(users):
-    for user in users:
+'''
+    will access the home directory
+'''
+parent_dir = os.path.expanduser("~print(")
+files_loc = parent_dir+'/users/'
+
+
+'''
+    creating a complete path
+'''
+folder_path = os.getcwd()+'/users/'
+all_files = os.listdir(os.getcwd()+'/users/')
+print()
+
+class DataInfo:
+    '''
+        this class will read data from files, generate uuid, email user name and then create a json file
+    '''
+    users_name=[]
+    def read_data(self, folderpath, allfiles):
+        '''
+            this method will read aal the names from the given file
+        '''
+        self.folderpath = folderpath
+        self.allfiles = allfiles
+        users_name=[]
+        for files in allfiles:
+            file_data = open(self.folderpath+files, "r")
+            for names in file_data:
+                users_name.append(names.strip())
+            file_data.close()
+        return users_name
+
+    def generate_uuid(self, users):
+        '''
+            This method will generate uuid
+        '''
+        self.users = users
+        for user in users:
+            b=random.randint(1000,9000000000)
+            name = user.split()
+        return hex(b)+name[0]
+
+    def generate_email(self, user):
+        '''
+            This method will generate email for every user
+        '''
+        self.user = user
+        print(user)
         first_name = user.split()[0]
         last_name = user.split()[1]
         email = first_name +"_"+ last_name[0]+ "@virtual.com"
-    return email
+        return email
 
-print(generate_email(users_name))
-# this loop will help to create a json format user data
-user_data =[]
-for user_name in users_name:
-    user_data.append({uniq_uuid(users_name):{"username":user_name,"email":generate_email(users_name)}})
+    def data_convert_into_json(self,users):
+        '''
+            This method will convert data into json
+        '''
+        self.users = users
+        user_data = []
+        for user_name in users:
+            user_data.append({self.generate_uuid(user_name):{"username":user_name,"email":self.generate_email(user_name)}})
+        return json.dumps(user_data)
 
-print(json.dumps(user_data))
-
-# Here we are storing json data in a file.
-json_output = open("json_output.txt","w")
-json_output.writelines(str(user_data))
+mydata = DataInfo()
+users_list = mydata.read_data(folder_path,all_files)
+output= mydata.data_convert_into_json(users_list)
+json_output = open("json_output.json","w")
+json_output.writelines(str(output))
 json_output.close()
