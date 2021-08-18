@@ -1,30 +1,20 @@
-# from django.test import TestCase
-# from .models import candidate_data
-
-# # class BasicTest(TestCase):
-	
-# #     def setUp(self):
-# #         print('setup is called')
-	
-# #     def test_me(self):
-# #         print("test case running")
-
-# #     def tearDown(self):
-# #         print("Teardown called")
-
-# class CandidateData(TestCase):
-#     @classmethod
-#     def setUpClass(cls):
-#         candidate_data.objects.create(candidate_name = "Marry", resume_portfolio_link="http://marry@virtual.com", primary_skills="python", secondary_skills="javascript",candidate_experince=2 )
-              
-#     def test_cadidate_data(self):
-#         candidate = candidate_data.objects.get(id=1)
-#         candidate_name = candidate._meta.get_field('candidate_name').verbose_name
-#         self.assertTrue(candidate_name).verbose_name
+from django.test import TestCase
+from .models import candidate_data
 
 
-#         # Author.objects.create(first_name='Big', last_name='Bob')
+class CandidateDataTest(TestCase):
 
-#         # author = Author.objects.get(id=1)
-#         # field_label = author._meta.get_field('first_name').verbose_name
-#         # self.assertEqual(field_label, 'first name')
+    '''
+        this class is created to test the post method. 
+        we will create a post from here and check the response.
+    '''
+
+    def setUp(self):
+        self.candidate_data = candidate_data()
+
+        def test_details(self):
+            # response = self.candidate_data.get('/details/')
+            # self.assertEqual(response, 200)
+
+            response = self.candidate_data.post('/', {'candidate_name':'Abc', 'resume_portfolio_link':'http://abc.com', 'primary_skills':'Ruby','secondary_skills':'html', 'candidate_experince':2})
+            self.assertEqual(response, 200)
