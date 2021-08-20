@@ -9,7 +9,7 @@
 '''
 from datetime import datetime
 import getpass
-import os.path
+import os.path                                              # this is not valid syntax
 import json
 import random
 
@@ -95,3 +95,11 @@ output= mydata.data_convert_into_json(users_list)
 json_output = open("json_output.json","w")
 json_output.writelines(str(output))
 json_output.close()
+
+
+
+# Reviews:-
+#    class must be no the top
+# you can use the main function
+# generate the email that may generate same email for same name users
+    
