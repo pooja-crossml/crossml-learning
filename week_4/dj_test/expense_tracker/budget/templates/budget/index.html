@@ -1,0 +1,25 @@
+{% extends "budget/base.html" %}
+
+{% block main %} 
+    hello index
+    {% if context %}
+    <table>
+        <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Comments</th>
+        <th>Amount</th>
+        <th>Date</th>
+    </tr>
+        {% for expense in context%}
+        <tr><td>{{expense.name}}</td>
+        <td>{{expense.category}}</td>
+        <td>{{expense.comments}}</td>
+        <td>{{expense.quantity}}</td>
+        <td>{{expense.Date}}</td>
+        <td><a href="/detail/{{expense.id}}"><button>View</button></a></td>
+    </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock main %}

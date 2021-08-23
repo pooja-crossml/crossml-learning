@@ -1,0 +1,26 @@
+{% extends "budget/base.html" %}
+
+{% block main %} 
+    {% if context %}
+    <table>
+        <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Comments</th>
+        <th>Amount</th>
+        <th>Date</th>
+    </tr>
+ 
+        <tr>
+        <td>{{context.name}}</td>
+        <td>{{context.category}}</td>
+        <td>{{context.comments}}</td>
+        <td>{{context.quantity}}</td>
+        <td>{{context.Date}}</td> 
+        <td> <a href="expense/"><button>Current Month</button></a> </td>
+        <td> <a href=""><button>Previous Month</button></a></td>
+        <td> <a href=""><button>Current Year</button></a></td>      
+    </tr>
+    </table>
+    {% endif %}
+{% endblock main %}
