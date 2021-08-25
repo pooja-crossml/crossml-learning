@@ -1,0 +1,9 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<form method='POST'>
+    {% csrf_token %}
+
+    {{fm}}
+<input type="submit" value="submit">Add expense</input>
+</form>
+{% endblock content %}

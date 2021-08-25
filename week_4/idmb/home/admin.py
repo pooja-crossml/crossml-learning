@@ -4,4 +4,4 @@ from .models import *
 admin.site.register(Movie)
 admin.site.register(Artist)
 admin.site.register(Rating)
-admin.site.register(Awards)
+admin.site.register(Award)

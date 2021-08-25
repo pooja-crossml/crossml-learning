@@ -3,5 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name ='home' ),
+    path('addmovie/', views.add_movie, name ='add_movie' ),
+
     
 ]

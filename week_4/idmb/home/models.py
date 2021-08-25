@@ -1,76 +1,74 @@
 from django.db import models
 
-class Awards(models.Model):
-    Name = models.CharField(max_length = 20)
-    Date = models.DateTimeField()
+class Award(models.Model):
+    ''' Store award related data '''
 
+    name = models.CharField(max_length = 20)
+    date = models.DateTimeField()
 
-class Movie(models.Model):
-    Name = models.CharField(max_length = 20)
-    Genure = models.CharField(max_length = 20)
-    Release_Date = models.DateTimeField()
-    avg_rating = models.IntegerField()
-    Language = models.CharField(max_length = 20)
-    Artist = models.CharField(max_length = 20)
-    Length = models.DecimalField(max_digits = 4,decimal_places=2)
-    Awards = models.ManyToManyField(Awards)
-
+    def __str__(self):
+	    return self.name
 
 class Artist(models.Model):
-
+    ''' Store Artist data '''
     GENDER_CHOICES = (("male", "male"),
     ("female", "female"),
     ("other", "other"))
 
-    Name = models.CharField(max_length = 20)
-    Date_of_Birth = models.DateTimeField()
-    Gender = models.CharField(max_length=10, choices= GENDER_CHOICES,default = 'male') 
-    movie = models.ManyToManyField(Movie)  
-    Awards = models.ManyToManyField(Awards)
+    name = models.CharField(max_length = 20)
+    dob = models.DateTimeField()
+    gender = models.CharField(max_length=10, choices= GENDER_CHOICES,default = 'male')  
+    award = models.ManyToManyField(Award, null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
+
+
+class Movie(models.Model):
+    '''  store movie data   '''
+
+    name = models.CharField(max_length = 20)
+    genure = models.CharField(max_length = 20)
+    release_Date = models.DateTimeField()
+    avg_rating = models.DecimalField(max_digits=4, decimal_places=2)
+    language = models.CharField(max_length = 20)
+    artist = models.ManyToManyField(Artist)
+    length = models.DecimalField(max_digits = 4,decimal_places=2)
+    awards = models.ManyToManyField(Award, null= True, blank=True)
+
+    def __str__(self):
+        return f'{self.name} --->> {self.avg_rating}'
+	
+#  Artist = models.CharField(max_length = 20)
 
 
 
 class Rating(models.Model):
+    '''
+        Store movie ratings
+    '''
+
     RATING_CHOICES = (
     ("1", "1"),
     ("2", "2"),
     ("3", "3"),
     ("4", "4"),
-    ("5", "5"))
-    Rating = models.CharField(max_length = 20,choices = RATING_CHOICES, default = '0')
-    Movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    Votes = models.IntegerField()
+    ("5", "5"),
+    ("6", "6"),
+    ("7", "7"),
+    ("8", "8"),
+    ("9", "9"),
+    ("10", "10"),)
+    rating = models.CharField(max_length = 20,choices = RATING_CHOICES, default = '1')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    votes = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.movie.name} --->> {self.rating}'
 
 
 
-
-# # Rating
-# # 	- Rating (0-10)
-# # 	- Movie
-# # 	- Votes
-# # Movie
-# # 	- Name
-# # 	- Genre
-# # 	- Release Date
-# # 	- Avg Rating
-# # 	- Language
-# # 	- Artists
-# # 	- Length
-# # 	- Awards received
-# # Artists
-# # 	- Name
-# # 	- Date of Birth
-# # 	- Gender
-# # 	- Awards received
-# # Awards
-# # 	- Name
-# # 	- Date
-# #          -Type (single/ Multipl)
-# # Rating
-# # 	- Rating (0-10)
-# # 	- Movie
-# # 	- Votes
 # # * Ability to add movie
 # # 	- A movie can have multiple artists
 # # * Ability to add Artists
