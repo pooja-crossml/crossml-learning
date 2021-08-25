@@ -18,7 +18,7 @@ class Artist(models.Model):
     name = models.CharField(max_length = 20)
     dob = models.DateTimeField()
     gender = models.CharField(max_length=10, choices= GENDER_CHOICES,default = 'male')  
-    award = models.ManyToManyField(Award, null=True, blank=True)
+    award = models.ManyToManyField(Award,  blank=True)
 
     def __str__(self):
         return self.name
@@ -35,7 +35,7 @@ class Movie(models.Model):
     language = models.CharField(max_length = 20)
     artist = models.ManyToManyField(Artist)
     length = models.DecimalField(max_digits = 4,decimal_places=2)
-    awards = models.ManyToManyField(Award, null= True, blank=True)
+    awards = models.ManyToManyField(Award, blank=True)
 
     def __str__(self):
         return f'{self.name} --->> {self.avg_rating}'
@@ -49,18 +49,9 @@ class Rating(models.Model):
         Store movie ratings
     '''
 
-    RATING_CHOICES = (
-    ("1", "1"),
-    ("2", "2"),
-    ("3", "3"),
-    ("4", "4"),
-    ("5", "5"),
-    ("6", "6"),
-    ("7", "7"),
-    ("8", "8"),
-    ("9", "9"),
-    ("10", "10"),)
-    rating = models.CharField(max_length = 20,choices = RATING_CHOICES, default = '1')
+    RATING_CHOICES = ((1, "1"),(2, "2"),(3, "3"),(4, "4"),(5, "5"),(6, "6"),(7, "7"),(8, "8"),(9, "9"),(10, "10"),)
+
+    rating = models.IntegerField(choices = RATING_CHOICES, default = '1')
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     votes = models.IntegerField()
 

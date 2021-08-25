@@ -3,7 +3,12 @@
 <form method='POST'>
     {% csrf_token %}
 
-    {{fm}}
-<input type="submit" value="submit">Add expense</input>
+    <table>
+        {{context.as_table}}
+
+<tr><td>
+    <input type="submit" value="submit"></input> 
+</td></tr>
+    </table>
 </form>
 {% endblock content %}

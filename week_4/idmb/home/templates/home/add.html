@@ -1,0 +1,14 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<form method='POST'>
+    {% csrf_token %}
+
+    <table>
+        {{context.as_table}}
+
+<tr><td>
+    <input type="submit" value="submit"></input> 
+</td></tr>
+    </table>
+</form>
+{% endblock content %}
