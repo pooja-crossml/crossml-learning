@@ -1,4 +1,5 @@
 from django import forms
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Movie, Artist, Rating, Award
@@ -12,12 +13,15 @@ def index(req):
 def add_movie(req):
     form=MovieForm
     if req.method=='POST':
+        breakpoint()
         form = MovieForm(req.POST)
         if form.is_valid():
             form.save()
-            return render(req, 'home/add_movie.html', {'context':form})
+            return render(req, 'home/add.html', {'context':form})
+        else:
+            return render(req, 'home/add.html', {'context':form})
     else:
-        return render(req, 'home/add_movie.html', {'context':form})
+        return render(req, 'home/add.html', {'context':form})
 
 
 def add_artist(req):
@@ -27,8 +31,6 @@ def add_artist(req):
         if form.is_valid():
             form.save()
             return render(req, 'home/add.html', {'context':form})
-            
-            # return HttpResponse("Yeppie!!!!!")
     else:
         return render(req, 'home/add.html', {'context':form})
 
@@ -69,3 +71,42 @@ def av1(request):
     print(a)
 
     return HttpResponse(a['rating__avg'])
+    
+
+def topten(req):
+    movies= Movie.objects.all().order_by('-avg_rating')[:5]
+    return render(req, 'home/display.html', {"context": movies, "title":'Top 10 movies'})
+
+def leastten(req):
+    movies= Movie.objects.all().order_by('avg_rating')[:5]
+    return render(req, 'home/display.html', {"context": movies, "title": 'Leaste rated 10 movies'})
+
+
+def within(req):
+    start_date = datetime.date(2019, 1,1)
+    end_date = datetime.date(2021, 12,1)
+    movies = Movie.objects.filter(release_Date__range=(start_date, end_date))
+    return render(req, 'home/display.html', {"context": movies, "title": f'Search from {start_date} to {end_date}'})
+
+
+
+
+
+def search_results(req):
+    # breakpoint()
+    # print(req.GET.get("q"))
+    # q= req.GET.get("q")
+    movies = Movie.objects.filter(name__icontains = 'Wednesday')
+    artist = Artist.objects.get(name__icontains ="Kareena")
+    # artist = Artist.objects.get(name=req.GET.get("q"))
+    # breakpoint()
+    print(artist.movie_set.all())
+    movie = artist.movie_set.all()
+    return render(req, 'home/search_display.html', {"context": movie})
+
+
+
+    # def get_queryset(self): # new
+    #     return City.objects.filter(
+    #         Q(name__icontains='Boston') | Q(state__icontains='NY')
+    #     )

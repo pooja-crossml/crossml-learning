@@ -1,7 +1,11 @@
 {% extends 'home/base.html' %}
 {% block content %}
 <h1>Hello</h1>
-<div><a href=""><button value="submit">Search</button></a></div>
+
+<form action="{% url 'search_results' %}" method="get">
+    <input name="q" type="text" placeholder="Search movie or artist">
+  </form>
+  <input id="duration_slider" type="range" min="1" max="168" value="48" />
 <a href=""><button value="submit">Top 10 rated movies</button></a>
 <a href=""><button value="submit">lowest rated 10 movies</button></a>
 <a href=""><button value="submit">range of movie</button></a>

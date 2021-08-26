@@ -63,13 +63,13 @@ class Rating(models.Model):
 # # * Ability to add movie
 # # 	- A movie can have multiple artists
 # # * Ability to add Artists
-# # * Ability to rate a movie
+# # * Ability to rate a movie ->TODO
 # # 	- Rating can be added multiple times
 # # 	- Avg Rating should change automatically for movie
 # # * Ability to give award to movie
 # # * Ability to give award to a artist
 # # Reporting
-# # * Ability to view to 10 rated movies
-# # * Ability to view lowest rated 10 movies
-# # * Ability to view movies released between certain dates
-# # * Ability to search movies by Movie Name or Artist Name (edited) 
+# # * Ability to view to 10 rated movies -->done
+# # * Ability to view lowest rated 10 movies-->done
+# # * Ability to view movies released between certain dates -->done
+# # * Ability to search movies by Movie Name or Artist Name (edited)  --> TODO
