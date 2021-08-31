@@ -1,6 +1,20 @@
 {% extends 'doc_manage/base.html' %}
 
 {% block main %} 
-hello {{name}}
+<h1>Hello upload page</h1>
+{% if messages %}
+    {% for message in messages%}
+        {{}}
+    {% endfor %}
+{% endif %}
 <a href="{% url 'logout' %}">Logout</a>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>{{ form.non_field_errors }}</p>
+    <p>{{context.as_p}}</p>
+    <input type="submit" value="upload">
+</form>
+
+
+
 {% endblock main %}
