@@ -9,13 +9,13 @@ from django.views.static import serve
 
 
 urlpatterns = [
-    path('', views.home, name= 'home'),
+    # path('', views.home, name= 'home'),
     path('signup/', views.sign_up, name='signup'),
     path('login/', views.login_user, name="login"),
     path('welcome/',views.welcome_page, name="welcome"),
     path('logout/', views.user_logout, name='logout'),
     path('upload/', views.upload_file, name="upload"),
-    # path('', views.report_data, name='report'),
+    path('', views.display_data, name="display"),
     url(r'^download/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
 ]
 

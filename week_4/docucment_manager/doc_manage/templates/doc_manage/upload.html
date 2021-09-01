@@ -1,20 +1,27 @@
 {% extends 'doc_manage/base.html' %}
 
-{% block main %} 
-<h1>Hello upload page</h1>
+{% block main %}
+
 {% if messages %}
-    {% for message in messages%}
-        {{}}
-    {% endfor %}
+<ul class="messages alert alert-danger list-group-none" role="alert">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+</ul>
 {% endif %}
-<a href="{% url 'logout' %}">Logout</a>
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p>{{ form.non_field_errors }}</p>
-    <p>{{context.as_p}}</p>
-    <input type="submit" value="upload">
-</form>
 
-
-
+<div>
+    <div class="row mx-auto border border-secondary rounded m-5">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row mx-auto col-6 m-5 p-4">
+                <div class=" d-md-flex justify-content-md-end">
+                    <a class="btn btn-danger col-2 m-3" href="{% url 'logout' %}">Logout</a>
+                </div>
+                <div>{{context.as_p}}</div>
+                <input class="col-2 mx-5  btn btn-primary " type="submit" value="upload">
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock main %}

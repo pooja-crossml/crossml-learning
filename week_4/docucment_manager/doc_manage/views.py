@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse, request, response, Http404
 from django.http import HttpResponseRedirect
 from .models import Document
@@ -10,6 +11,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import os
 from django.utils import timezone
+import datetime
+from datetime import timedelta
 
 
 def home(req):
@@ -42,17 +45,17 @@ def login_user(req):
             if user is not None:
                 # return redirect('welcome_page.html')
                 login(req, user)
-                return HttpResponseRedirect('/welcome/')
+                return redirect('display')
         return render(req, 'doc_manage/login.html')
     else:
-        return HttpResponseRedirect('/welcome/')
+        return redirect('display')
 
 @login_required
 def welcome_page(req):
-    form = DocumentForm()
+    # form = DocumentForm()
     name = req.user.username
-    # print(name)
-    return render(req, 'doc_manage/upload.html', {'context': form,'name':name })
+    print(name)
+    return render(req, 'doc_manage/welcome_page.html', {'context':name })
 
 
 def user_logout(req):
@@ -60,26 +63,24 @@ def user_logout(req):
     return HttpResponseRedirect('/login/')
 
 
-@login_required
+# @login_required
 def upload_file(req):
     # breakpoint()
     if req.method == 'POST':
         form = DocumentForm(req.POST, req.FILES)
+        # breakpoint()
         if req.user.is_authenticated:
             user=(req.user.id)
-            print(user)
-            print("\n\n")
             user_obj=User.objects.get(pk=user)
-            print(user_obj)
-            print("\n\n")
             pdf_per_day_limit=Document.objects.filter(user=user_obj.pk).filter(created_at__date=timezone.now()).count()
-            print(pdf_per_day_limit)
-            print("\n\n")
+
             # breakpoint()
             if pdf_per_day_limit==5:
-                messages.info(request,"you have reached the daily limit wait unitill 12 pm to upload more")
+                # breakpoint()
+                messages.info(req,"you have reached the daily limit wait unitill 12 pm to upload more")
                 return redirect('upload')
             else:
+                # breakpoint()
                 if form.is_valid():
                     document = Document.objects.create(
                         user=user_obj,
@@ -89,47 +90,80 @@ def upload_file(req):
                     document.save()
                     messages.success(req, "Document created successfully")
                     return HttpResponseRedirect('/upload/')
+                else:
+                    messages.error(req, form.errors['data'])
+                    return redirect('upload')
+        return redirect('login')
     else:
         form = DocumentForm()
         return render(req, 'doc_manage/upload.html', {'context': form})
 
 
-@login_required
+# @login_required
 def download(req, path):
-    
-    file_path = os.path.join(settings.MEDIA_ROOT, path)
-    if os.path.exists(file_path):
-        with open(file_path,'rb') as f:
-            response=HttpResponse(f.read(), content_type="application/data")
-            response['Content-Disposition']='inline;filename='+os.path.basename(file_path)
-            return response
-    raise Http404
+    if req.user.is_authenticated:
+        file_path = os.path.join(settings.MEDIA_ROOT, path)
+        if os.path.exists(file_path):
+            with open(file_path,'rb') as f:
+                response=HttpResponse(f.read(), content_type="application/data")
+                response['Content-Disposition']='inline;filename='+os.path.basename(file_path)
+                return response
+        raise Http404
+    return redirect('login')
 
 
-def report_data(req):
-    pass
-#     if request.GET:
-#         report_type = request.GET['report_type']
-#         if report_type == 'sort_by_name':
-#             data = Document.objects.all().order_by('title')
+def display_data(req):
+    if req.user.is_authenticated:
+        today = datetime.date.today()
+        current_month = datetime.date.today().month
+        current_year = datetime.date.today().year
+        user=req.user.username
 
-#     else:
-#         data = Document.objects.all()
-#         return render(req, 'doc_manege/report.html', {'context': data})
+        if req.method == 'GET':
+            report_type = req.GET.get('report_type')
+            if report_type == 'sort_by_name':
+                user_data = Document.objects.filter(user=User.objects.get(username=req.user.username)).order_by('title')
+                return render(req, 'doc_manage/display.html', {'context': user_data,'user':user.upper()})
+
+            elif report_type == 'current_month':
+                '''filter with month value'''
+
+                user_data = Document.objects.filter(user=User.objects.get(username=user)).filter(created_at__month = current_month)
+                return render(req, 'doc_manage/display.html', {'context': user_data})
 
 
-# def report(request):
-#     if request.GET:
-#         report_type = request.GET['report_type']
-#         if report_type == 'current_month':
-#             data = Expense.objects.filter(created_at__month=today.month)
-#         elif report_type == 'previous_month':
-#             data = Expense.objects.filter(
-#                 created_at__month=previous_month.month)
-#         elif report_type == 'current_year':
-#             data = Expense.objects.filter(created_at__year=today.year)
-#         else:
-#             data = Expense.objects.all()
-#     else:
-#         data = Expense.objects.all()
-#     return render(request, 'tracker/report.html', {'ExpenseData': data})
+            elif report_type == 'current_month':
+                '''filter with year value'''
+                # pdf_list = user_docs.filter(created_at__month=request.GET['month'])
+
+                user_data = Document.objects.filter(user=User.objects.get(username=user)).filter(created_at__year = current_year)
+                return render(req, 'doc_manage/display.html', {'context': user_data})
+
+
+            elif report_type == 'within':
+                '''filter with start date and end date'''
+                # pdf_list = user_docs.filter(created_at__month=request.GET['month'])
+                print("\n\n within range date metho")
+                print(report_type)
+                print
+                user_data = Document.objects.filter(user=User.objects.get(username=user).filter(created_at__year = current_year))
+                return render(req, 'doc_manage/display.html', {'context': user_data})
+
+            else:
+                user_data = Document.objects.filter(user=User.objects.get(username=req.user.username)).order_by('id')
+                return render(req, 'doc_manage/display.html', {'context': user_data})
+
+        elif req.method=='POST':
+            # breakpoint()
+            start_date = req.POST['startdate']
+            print(start_date)
+            end_date = req.POST['enddate']
+            user_data = Document.objects.filter(user=req.user, created_at__range=[start_date,end_date])
+
+            return render(req, 'doc_manage/display.html', {'context': user_data})
+
+    return redirect('login')
+
+
+
+
