@@ -19,7 +19,8 @@
                     <a class="btn btn-danger col-2 m-3" href="{% url 'logout' %}">Logout</a>
                 </div>
                 <div>{{context.as_p}}</div>
-                <input class="col-2 mx-5  btn btn-primary " type="submit" value="upload">
+                <input class="col-2 mx-5 mt-5  btn btn-success " type="submit" value="upload">
+                <a class="btn btn-primary col-2 mx-2 mt-5" href="{% url 'display' %}">Back</a>
             </div>
         </form>
     </div>
