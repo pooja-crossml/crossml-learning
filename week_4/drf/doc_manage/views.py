@@ -9,10 +9,13 @@ from rest_framework import viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.decorators import permission_classes,authentication_classes,action
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
+from url_filter.integrations.drf import DjangoFilterBackend
+from django_filters import rest_framework as filters
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -41,8 +44,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
 @authentication_classes([TokenAuthentication,])
 @permission_classes([IsAuthenticated,]) 
 def documentList(req):
-    
-    
     doc = Document.objects.filter(user=req.user)
     serializer = DocumentSerializer(doc, many=True)
     return Response(serializer.data)
@@ -64,4 +65,29 @@ def documentCreate(req):
     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+def search(req, value):
+    breakpoint()
+    doc = Document.objects.all()
+    serializer = DocumentSerializer(doc,many=True)
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_fields = ('id','user','title','data','created_at')
+    
 
+
+# def search(self, title):
+#     """
+#     This view should return a list of all the purchases for
+#     the user as determined by the username portion of the URL.
+#     """
+#     title= Document.objects.filter(title=title)
+#     return Purchase.objects.filter(purchaser__username=username)
+
+
+# @api_view(['GET'])
+# class SearchData(generics.ListAPIView):
+#     pass
+    # doc = Document.objects.all()
+    # serializer = DocumentSerializer(doc,many=True)
+    # filter_backends = (filters.DjangoFilterBackend,)
+    # filterset_fields = ('id','user','title','data','created_at')
